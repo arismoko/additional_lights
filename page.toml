@@ -11,13 +11,17 @@ What it does:
 - 96 standing torches and fire pits in two sizes and 24 materials. A placed one lights at once; right-click relights it; placed while sneaking it stays unlit and ignores redstone.
 - Redstone lights a standing torch or fire pit and puts it out again, and a comparator reads its fire: 6 for fire, 3 for soul fire, 9 for light.
 - The soul wand turns a fire, standing torch or floor torch to soul fire, and the light wand turns a standing torch or fire pit into a light block; sneak and right-click to turn it back. Held in the off hand, a wand sets what you place.
+- Standing torches, fire pits and the wands list their usage in the tooltip while you hold Shift. Breaking a fire plays the extinguish sound.
 - The original's recipes, drops, sounds and creative tab, in every language it ships.
+- The fire recipes (fire and soul fire for each pedestal) are off, as in the original; set `enableFireCrafting = true` in `config/additional_lights-common.toml` and run `/reload` to craft them.
 
 Differences from the original:
 
 - Redstone lights a standing torch or fire pit at the end of the tick its signal changes.
 - Breaking a light block above a standing torch or fire pit breaks the light, not the pedestal under it.
-- Items show no tooltips, and fires use the wool sounds rather than the extinguish sound when broken.
+- Breaking a light block above a pedestal takes the light's own time and sound, not the pedestal's.
+- The fire surface is the fixed texture (the original's "static" mode); its "dynamic" mode, which rebuilds it from the game's campfire fire, is not available.
+- The creative tab has no colour-sort button.
 """
 categories = ["decoration"]
 

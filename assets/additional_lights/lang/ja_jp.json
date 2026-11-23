@@ -157,5 +157,17 @@
   "block.additional_lights.standing_torch_s_stone": "石のかがり火",
   "block.additional_lights.standing_torch_s_stone_bricks": "石レンガのかがり火",
   "item.additional_lights.light_wand": "光の杖",
-  "item.additional_lights.soul_wand": "魂の杖"
+  "item.additional_lights.soul_wand": "魂の杖",
+  "additional_lights.txt.shift": "§7<§3Shift§r§7>キーを押すと情報が表示されます。",
+  "additional_lights.txt.usage": "§6使い方:",
+  "additional_lights.txt.tips": "§6ヒント:",
+  "additional_lights.txt.item.soul_wand.rightclick": "- §9右クリック:§r 魂の炎に切り替えます。",
+  "additional_lights.txt.item.wand.sneak_rightclick": "- §9スニーク右クリック:§r ひとつ前の状態に戻します。",
+  "additional_lights.txt.item.soul_wand.lefthand": "- §9左手に持つ:§r 設置したオブジェクトに自動的に適用されます。",
+  "additional_lights.txt.item.soul_wand.piglin": "- ピグリンは魂の炎を恐れます。(松明は効果がありません)",
+  "additional_lights.txt.item.light_wand.rightclick": "- §9右クリック:§r 対応する炎を光に変えます。",
+  "additional_lights.txt.item.light_wand.lefthand": "- §9左手に持つ:§r 対応する設置物に自動的に適用されます。",
+  "additional_lights.txt.block.pedestal.rightclick": "- §9右クリック:§r 点火します。",
+  "additional_lights.txt.block.pedestal.sneaking": "- §9スニーク:§r 火をつけずに設置し、信号を拒否します。",
+  "additional_lights.txt.block.pedestal.signals": "- レッドストーン信号に対応しています。"
 }

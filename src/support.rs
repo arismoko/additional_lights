@@ -305,6 +305,28 @@ impl BlockPart for Fire {
     }
 }
 
+/// The sounds of the normal and soul fires (`FireBase.createProps`): the extinguish sound when
+/// one is broken, at 1.5 volume, and wool's and stone's for the rest.
+pub struct FireSound;
+
+#[mod_api::sunrise_part]
+impl BlockPart for FireSound {
+    fn sound_type(
+        &self,
+        _context: &dyn mod_api::LoopContext,
+        event: &mut mod_api::SoundTypeEvent<'_>,
+    ) {
+        let sound = &mut *event.sound;
+        sound.volume = 1.5;
+        sound.pitch = 1.0;
+        sound.break_sound = "additional_lights:fire_extinguish".into();
+        sound.step = "minecraft:block.wool.step".into();
+        sound.place = "minecraft:block.stone.place".into();
+        sound.hit = "minecraft:block.wool.hit".into();
+        sound.fall = "minecraft:block.wool.fall".into();
+    }
+}
+
 /// The floor and wall torches: the soul wand turns their flame.
 pub struct Torch;
 
@@ -455,6 +477,8 @@ pub fn declare(r: &mut dyn Registrar) {
         for material in crate::MATERIALS {
             let block = r.block_key(&format!("{MOD}:{}_{material}", kind.name()));
             r.block_part(block, Pedestal);
+            let item = r.item_key(&format!("{MOD}:{}_{material}", kind.name()));
+            r.item_part(item, crate::tips::Tooltip(crate::tips::Tip::Pedestal));
         }
         for fire in [FireType::Normal, FireType::Soul, FireType::Light] {
             let block = r.block_key(&pedestal::fire_block(kind, fire));
@@ -463,6 +487,10 @@ pub fn declare(r: &mut dyn Registrar) {
                 r.particle_key("minecraft:large_smoke"),
             ];
             r.block_part(block, Fire { smoke });
+            if fire != FireType::Light {
+                let block = r.block_key(&pedestal::fire_block(kind, fire));
+                r.block_part(block, FireSound);
+            }
         }
     }
     for material in crate::TORCH_MATERIALS {
@@ -473,5 +501,12 @@ pub fn declare(r: &mut dyn Registrar) {
                 r.block_part(block, FloorTorch);
             }
         }
+    }
+    for (name, tip) in [
+        ("soul_wand", crate::tips::Tip::SoulWand),
+        ("light_wand", crate::tips::Tip::LightWand),
+    ] {
+        let item = r.item_key(&format!("{MOD}:{name}"));
+        r.item_part(item, crate::tips::Tooltip(tip));
     }
 }

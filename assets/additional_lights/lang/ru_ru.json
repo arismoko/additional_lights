@@ -157,5 +157,17 @@
   "block.additional_lights.standing_torch_s_stone": "Напольный факел из камня",
   "block.additional_lights.standing_torch_s_stone_bricks": "Напольный факел из каменных кирпичей",
   "item.additional_lights.light_wand": "Жезл света",
-  "item.additional_lights.soul_wand": "Жезл души"
+  "item.additional_lights.soul_wand": "Жезл души",
+  "additional_lights.txt.shift": "§7Нажми <§3Shift§r§7> для информации.",
+  "additional_lights.txt.usage": "§6Применение:",
+  "additional_lights.txt.tips": "§6Подсказки:",
+  "additional_lights.txt.item.soul_wand.rightclick": "- §9ПКМ:§r Сменить на огонь душ.",
+  "additional_lights.txt.item.wand.sneak_rightclick": "- §9ПКМ в приседе:§r Вернуть предыдущее состояние.",
+  "additional_lights.txt.item.soul_wand.lefthand": "- §9Держа в левой руке:§r размещённый объект применяется автоматически.",
+  "additional_lights.txt.item.soul_wand.piglin": "- Пиглины боятся огня душ. (факелы не работают)",
+  "additional_lights.txt.item.light_wand.rightclick": "- §9ПКМ:§r Превратить поддерживаемое пламя в свет.",
+  "additional_lights.txt.item.light_wand.lefthand": "- §9Держа в левой руке:§r автоматически применяется к поддерживаемым размещённым объектам.",
+  "additional_lights.txt.block.pedestal.rightclick": "- §9ПКМ:§r Зажечь.",
+  "additional_lights.txt.block.pedestal.sneaking": "- §9Присев:§r Установить без огня, отменить сигнал.",
+  "additional_lights.txt.block.pedestal.signals": "- Поддерживает сигналы редстоуна."
 }

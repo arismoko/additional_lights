@@ -157,5 +157,17 @@
   "block.additional_lights.standing_torch_s_stone": "石頭站立火把",
   "block.additional_lights.standing_torch_s_stone_bricks": "石磚站立火把",
   "item.additional_lights.light_wand": "光之魔杖",
-  "item.additional_lights.soul_wand": "靈魂魔杖"
+  "item.additional_lights.soul_wand": "靈魂魔杖",
+  "additional_lights.txt.shift": "§7按下 <§3Shift§r§7> 以獲取資訊。",
+  "additional_lights.txt.usage": "§6使用方式:",
+  "additional_lights.txt.tips": "§6提示:",
+  "additional_lights.txt.item.soul_wand.rightclick": "- §9右鍵:§r 切換為靈魂之火。",
+  "additional_lights.txt.item.wand.sneak_rightclick": "- §9潛行右鍵:§r 恢復到先前的狀態。",
+  "additional_lights.txt.item.soul_wand.lefthand": "- §9左手持有:§r 放置的物體將自動應用。",
+  "additional_lights.txt.item.soul_wand.piglin": "- 豬布林害怕靈魂之火。（火把無效）",
+  "additional_lights.txt.item.light_wand.rightclick": "- §9右鍵:§r 將支援的火焰變成光。",
+  "additional_lights.txt.item.light_wand.lefthand": "- §9左手持有:§r 會自動套用到支援的放置物件。",
+  "additional_lights.txt.block.pedestal.rightclick": "- §9右鍵:§r 點燃。",
+  "additional_lights.txt.block.pedestal.sneaking": "- §9潛行:§r 無火放置，拒絕信號。",
+  "additional_lights.txt.block.pedestal.signals": "- 支援紅石信號。"
 }

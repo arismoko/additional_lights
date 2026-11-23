@@ -157,5 +157,17 @@
   "block.additional_lights.standing_torch_s_stone": "돌 입식 횃불",
   "block.additional_lights.standing_torch_s_stone_bricks": "석재 벽돌 입식 횃불",
   "item.additional_lights.light_wand": "빛의 지팡이",
-  "item.additional_lights.soul_wand": "영혼 지팡이"
+  "item.additional_lights.soul_wand": "영혼 지팡이",
+  "additional_lights.txt.shift": "<§3Shift§r§7>를 눌러 정보를 확인하세요.",
+  "additional_lights.txt.usage": "§6사용처:",
+  "additional_lights.txt.tips": "§6팁:",
+  "additional_lights.txt.item.soul_wand.rightclick": "- §9우클릭:§r 영혼 불로 바꿉니다.",
+  "additional_lights.txt.item.wand.sneak_rightclick": "- §9웅크린 채 우클릭:§r 이전 상태로 되돌립니다.",
+  "additional_lights.txt.item.soul_wand.lefthand": "- §9다른 손에 들고 있을 때:§r 설치한 조명을 영혼 불로 바꿉니다.",
+  "additional_lights.txt.item.soul_wand.piglin": "- 피글린은 영혼 불을 두려워 합니다. (횃불은 적용되지 않습니다)",
+  "additional_lights.txt.item.light_wand.rightclick": "- §9우클릭:§r 지원되는 불꽃을 빛으로 바꿉니다.",
+  "additional_lights.txt.item.light_wand.lefthand": "- §9다른 손에 들고 있을 때:§r 지원되는 설치물에 자동으로 적용됩니다.",
+  "additional_lights.txt.block.pedestal.rightclick": "- §9우클릭:§r 불을 붙입니다.",
+  "additional_lights.txt.block.pedestal.sneaking": "- §9웅크리기:§r 불을 붙이지 않고 설치합니다. 신호를 보내지 않습니다.",
+  "additional_lights.txt.block.pedestal.signals": "- 레드스톤 신호를 지원합니다."
 }

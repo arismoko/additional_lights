@@ -157,5 +157,17 @@
   "block.additional_lights.standing_torch_s_stone": "Tocha Vertical de Pedra",
   "block.additional_lights.standing_torch_s_stone_bricks": "Tocha Vertical de Tijolos de Pedra",
   "item.additional_lights.light_wand": "Varinha da Luz",
-  "item.additional_lights.soul_wand": "Varinha da Alma"
+  "item.additional_lights.soul_wand": "Varinha da Alma",
+  "additional_lights.txt.shift": "§7Pressione <§3Shift§r§7> para informações.",
+  "additional_lights.txt.usage": "§6Uso:",
+  "additional_lights.txt.tips": "§6Dicas:",
+  "additional_lights.txt.item.soul_wand.rightclick": "- §9Clique com o botão direito:§r Muda para o fogo das almas.",
+  "additional_lights.txt.item.wand.sneak_rightclick": "- §9Agachar + clique direito:§r Volta ao estado anterior.",
+  "additional_lights.txt.item.soul_wand.lefthand": "- §9LSegurar com a mão esquerda:§r Muda o objeto para fogo das almas automaticamente.",
+  "additional_lights.txt.item.soul_wand.piglin": "- Piglins têm medo do fogo das almas. (Com tochas não funciona)",
+  "additional_lights.txt.item.light_wand.rightclick": "- §9Clique com o botão direito:§r Transforma chamas compatíveis em luz.",
+  "additional_lights.txt.item.light_wand.lefthand": "- §9Segurar com a mão esquerda:§r Aplica automaticamente aos objetos compatíveis que você colocar.",
+  "additional_lights.txt.block.pedestal.rightclick": "- §9Clique com o botão direito:§r Ignição. ",
+  "additional_lights.txt.block.pedestal.sneaking": "- §9Esgueirando-se: §r Colocar sem fogo, rejeita sinais de redstone.",
+  "additional_lights.txt.block.pedestal.signals": "- Suporta sinais de redstone."
 }

@@ -8,15 +8,24 @@
 //! | `set_placed_by` | the parts | a placed pedestal lights; a fire sits in its own pedestal |
 //! | `neighbor_changed` | [`support::Pedestal`] | queues a pedestal whose neighbour changed |
 //! | `level_tick_post` | this module | redstone lights or puts out each queued pedestal |
+//! | `tooltip` | [`tips::Tooltip`] | the pedestals' and wands' Shift-for-info lines |
+//! | `sound_type` | [`support::FireSound`] | the fires' extinguish sound |
+//! | `register_configs`, `config_loading`, `register_load_conditions` | this module | `enableFireCrafting` and the condition on the fire recipes |
 //! | `analog_output` | [`support::Pedestal`] | comparators read the fire's type |
 //! | `update_shape` | [`support::Fire`] | a fire with nothing under it goes out |
 //! | `state_for_placement` | [`support::FloorTorch`] | a torch placed against a wall is the wall torch |
 
+pub mod config;
 pub mod pedestal;
 pub mod support;
+pub mod tips;
 pub mod torch;
 
-use mod_api::{self, Hooks, HostSide, LevelTickPostEvent, Registrar, RegistrationContext};
+use mod_api::{
+    self, Config, ConfigContext, ConfigKind, ConfigLoadingEvent, Hooks, HostSide, Identifier,
+    LevelTickPostEvent, RegisterConfigsEvent, RegisterLoadConditionsEvent, Registrar,
+    RegistrationContext,
+};
 
 /// The pedestals' materials (`tools/block_definitions.csv`).
 pub const MATERIALS: [&str; 24] = [
@@ -85,6 +94,38 @@ struct Mod;
 impl Hooks for Mod {
     fn register(&self, r: &mut dyn Registrar, _: &RegistrationContext) {
         support::declare(r);
+    }
+
+    /// `AdditionalLightsConfig`: `config/additional_lights-common.toml`.
+    fn register_configs(&self, _: &dyn ConfigContext, event: &mut RegisterConfigsEvent<'_>) {
+        event.configs.push(Config::new(
+            pedestal::MOD,
+            ConfigKind::Common,
+            config::DEFAULT,
+        ));
+    }
+
+    fn config_loading(&self, _: &dyn ConfigContext, event: &mut ConfigLoadingEvent<'_>) {
+        if event.config.mod_id == pedestal::MOD {
+            config::set_from(&event.config.text);
+        }
+    }
+
+    fn config_reloading(&self, _: HostSide, event: &mut mod_api::ConfigReloadingEvent<'_>) {
+        if event.config.mod_id == pedestal::MOD {
+            config::set_from(&event.config.text);
+        }
+    }
+
+    /// `EnableFireCraftingCondition`.
+    fn register_load_conditions(
+        &self,
+        _: &RegistrationContext,
+        event: &mut RegisterLoadConditionsEvent<'_>,
+    ) {
+        if let Ok(id) = Identifier::parse("additional_lights:enable_fire_crafting") {
+            let _ = event.conditions.register(id, config::EnableFireCrafting);
+        }
     }
 
     fn level_tick_post(&self, host: HostSide<'_>, event: &mut LevelTickPostEvent) {

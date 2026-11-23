@@ -157,5 +157,17 @@
   "block.additional_lights.standing_torch_s_stone": "Kleine Steinfeuerschale",
   "block.additional_lights.standing_torch_s_stone_bricks": "Kleine Steinziegelfeuerschale",
   "item.additional_lights.light_wand": "Lichtstab",
-  "item.additional_lights.soul_wand": "Seelenfeuerstab"
+  "item.additional_lights.soul_wand": "Seelenfeuerstab",
+  "additional_lights.txt.shift": "§7Drücke <§3Shift§r§7> für Info",
+  "additional_lights.txt.usage": "§6Verwendung:",
+  "additional_lights.txt.tips": "§6Tipps:",
+  "additional_lights.txt.item.soul_wand.rightclick": "- §9Rechtsklick:§r Ändern zu Seelenfeuer",
+  "additional_lights.txt.item.wand.sneak_rightclick": "- §9Schleichen + Rechtsklick:§r Zum vorherigen Zustand zurückkehren.",
+  "additional_lights.txt.item.soul_wand.lefthand": "- §9Wenn in der Zweithand gehalten:§r Seelenfeuer wird beim Platzieren angewendet.",
+  "additional_lights.txt.item.soul_wand.piglin": "- Piglins haben Angst vor Seelenfeuer. (Funktioniert nicht bei Fackeln)",
+  "additional_lights.txt.item.light_wand.rightclick": "- §9Rechtsklick:§r Unterstützte Flammen in Licht ändern.",
+  "additional_lights.txt.item.light_wand.lefthand": "- §9Wenn in der Zweithand gehalten:§r Wird automatisch auf unterstützte platzierte Objekte angewendet.",
+  "additional_lights.txt.block.pedestal.rightclick": "- §9Rechtsklick:§r Feuer entzünden",
+  "additional_lights.txt.block.pedestal.sneaking": "- §9Schleichen:§r Wird ohne Feuer platziert, ignoriert Redstone-Signale",
+  "additional_lights.txt.block.pedestal.signals": "- Reagiert auf Redstone-Signale"
 }
