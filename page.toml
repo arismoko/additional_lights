@@ -1,0 +1,23 @@
+summary = "Lamps, floor torches and wall torches made from 28 vanilla materials."
+description = """
+Lamps, floor torches and wall torches made from 28 vanilla materials.
+
+A port of [Additional Lights](https://github.com/mgen256/AdditionalLights) by mgen256 to [Sunrise](https://playsunrise.net) (Minecraft Java 26.3), as a content mod: the original's blocks, models, textures, recipes and strings, with no code.
+
+What it does:
+
+- 24 lamps (light 15), placed on any face like an end rod.
+- 28 floor torches and 28 wall torches (light 14) in stone, wood, metal, wool, glass and ice materials.
+- Each torch's light follows its fire type as in the original: 14 for normal fire, 10 for soul fire and 15 for light.
+- The original's recipes (glowstone over the material for lamps), drops and creative tab, in every language it ships.
+
+Differences from the original:
+
+- The standing torches, fire pits, fires and the fire-type, soul and light wands are not ported yet.
+- A floor torch item places only the floor torch; place the wall torch from its own block (a content mod can't give a torch item a wall form yet).
+"""
+categories = ["decoration"]
+
+[[screenshots]]
+path = "page/world.png"
+caption = "Lamps and torches in several materials."
