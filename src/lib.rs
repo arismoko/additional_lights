@@ -4,7 +4,8 @@
 //! | Moment | Where | What it does |
 //! |---|---|---|
 //! | `register` | [`support::declare`] | attaches the pedestal, fire and torch parts |
-//! | `use_item_on` | the parts | lights a pedestal; a wand turns a pedestal's or torch's fire |
+//! | `use_item_on` | [`support::Pedestal`] | lights a pedestal |
+//! | `use_on` | [`support::Wand`] | a wand turns a pedestal's or torch's fire, or turns it back sneaking |
 //! | `set_placed_by` | the parts | a placed pedestal lights; a fire sits in its own pedestal |
 //! | `neighbor_changed` | [`support::Pedestal`] | queues a pedestal whose neighbour changed |
 //! | `level_tick_post` | this module | redstone lights or puts out each queued pedestal |
@@ -13,13 +14,11 @@
 //! | `register_configs`, `config_loading`, `register_load_conditions` | this module | `enableFireCrafting` and the condition on the fire recipes |
 //! | `analog_output` | [`support::Pedestal`] | comparators read the fire's type |
 //! | `update_shape` | [`support::Fire`] | a fire with nothing under it goes out |
-//! | `state_for_placement` | [`support::FloorTorch`] | a torch placed against a wall is the wall torch |
 
 pub mod config;
 pub mod pedestal;
 pub mod support;
 pub mod tips;
-pub mod torch;
 
 use mod_api::{
     self, Config, ConfigContext, ConfigKind, ConfigLoadingEvent, Hooks, HostSide, Identifier,

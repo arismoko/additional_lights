@@ -7,7 +7,7 @@ A port of [Additional Lights](https://github.com/mgen256/AdditionalLights) by mg
 ## What it does
 
 - 24 lamps (light 15), placed on any face like an end rod.
-- 28 torches (light 14) in stone, wood, metal, wool, glass and ice materials, standing on the floor or hung on a wall as you place them.
+- 28 torches (light 14) in stone, wood, metal, wool, glass and ice materials, standing on the floor.
 - 96 standing torches and fire pits in two sizes and 24 materials. A placed one lights at once; right-click relights it; placed while sneaking it stays unlit and ignores redstone.
 - Redstone lights a standing torch or fire pit and puts it out again, and a comparator reads its fire: 6 for fire, 3 for soul fire, 9 for light.
 - The soul wand turns a fire, standing torch or floor torch to soul fire, and the light wand turns a standing torch or fire pit into a light block; sneak and right-click to turn it back. Held in the off hand, a wand sets what you place.
@@ -18,10 +18,10 @@ A port of [Additional Lights](https://github.com/mgen256/AdditionalLights) by mg
 ## Differences from the original
 
 - Redstone lights a standing torch or fire pit at the end of the tick its signal changes.
-- Breaking a light block above a standing torch or fire pit breaks the light, not the pedestal under it.
 - Breaking a light block above a standing torch or fire pit breaks only the light, at once and with the wool sound, not the pedestal under it.
 - The fire surface is the fixed texture (the original's "static" mode); its "dynamic" mode, which rebuilds it from the game's campfire fire, is not available.
 - The creative tab has no colour-sort button.
+- A torch placed against a wall becomes the game's own wall torch, not the material's: Sunrise cannot yet give a mod's torch item a wall form ([sunrise-org/sunrise#4879](https://github.com/sunrise-org/sunrise/issues/4879)).
 
 ## Building
 

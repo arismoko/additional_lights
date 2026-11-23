@@ -9,11 +9,9 @@
           "name": "additional_lights:fire_pit_l_end_stone"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ],
   "random_sequence": "additional_lights:blocks/fire_pit_l_end_stone"

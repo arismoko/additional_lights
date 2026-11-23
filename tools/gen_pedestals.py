@@ -69,11 +69,13 @@ def flag(name):
 
 
 def loot(item, when=None):
-    pool = {'rolls': 1, 'entries': [{'type': 'minecraft:item', 'name': item}],
-            'conditions': [{'condition': 'minecraft:survives_explosion'}]}
+    """A self-drop in 26.3's shape: one `condition`, `match_block` for a state check."""
+    explosion = {'type': 'minecraft:survives_explosion'}
+    condition = explosion
     if when:
-        pool['conditions'].insert(0, {'condition': 'minecraft:block_state_property',
-                                      'block': item, 'properties': when})
+        state = {'type': 'minecraft:match_block', 'blocks': item, 'state': when}
+        condition = {'type': 'minecraft:all_of', 'terms': [state, explosion]}
+    pool = {'rolls': 1, 'entries': [{'type': 'minecraft:item', 'name': item}], 'condition': condition}
     return {'type': 'minecraft:block', 'pools': [pool], 'random_sequence': f'{MOD}:blocks/{item.split(":")[1]}'}
 
 

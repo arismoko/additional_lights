@@ -9,15 +9,14 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::sync::{Mutex, MutexGuard};
 
 use mod_api::{
-    self, AnalogOutputEvent, AnimateTickEvent, BlockFace, BlockPart, BlockUpdateFlags, ClientHost,
-    Direction, HasAnalogOutputEvent, Host, InteractionResult, LevelHost, LevelRandomHost, LevelRef,
-    LevelSide, LevelTicksHost, NeighborChangedEvent, NeighbourUpdate, ParticleKey, ParticleOptions,
-    PlayerRef, Registrar, ServerHost, SetPlacedByEvent, SoundSource, StateForPlacementEvent,
-    SupportType, UpdateShapeEvent, UseItemOnEvent,
+    self, AnalogOutputEvent, AnimateTickEvent, BlockPart, BlockUpdateFlags, ClientHost, Direction,
+    HasAnalogOutputEvent, Host, HostSide, InteractionResult, ItemPart, LevelHost, LevelRandomHost,
+    LevelRef, LevelTicksHost, NeighborChangedEvent, NeighbourUpdate, ParticleKey, ParticleOptions,
+    PlayerRef, Registrar, ServerHost, SetPlacedByEvent, SoundSource, UpdateShapeEvent,
+    UseItemOnEvent, UseOnEvent,
 };
 
 use crate::pedestal::{self, FireType, Kind, MOD, Reader, State, World};
-use crate::torch;
 
 /// A level on the server, read and written through the server host.
 struct ServerLevel<'a> {
@@ -156,24 +155,71 @@ fn wand_on_pedestal(
     update_comparators(host, level, pos);
 }
 
+/// The soul and light wands (`SoulWand.use`, `LightWand.use`): a click on a pedestal, the fire
+/// in one (which changes the pedestal under it) or a torch turns its fire, and a sneaking click
+/// turns it back. Every wand click reaches the item, sneaking or not, as the pedestal fails a
+/// wand and a sneaking click with an item skips the block.
+pub struct Wand;
+
+#[mod_api::sunrise_part]
+impl ItemPart for Wand {
+    fn use_on(&self, host: HostSide<'_>, event: &mut UseOnEvent<'_>) -> Option<InteractionResult> {
+        let HostSide::Server(host) = host else {
+            return None;
+        };
+        let wand = FireType::of_wand(event.stack.item().id(&*host)?)?;
+        let level = host.level(host.dimension())?;
+        let player = host.player(event.player);
+        let state = ServerLevel { host, level }.state(event.pos)?;
+        let [x, y, z] = event.pos;
+        let pedestal = if Kind::of_pedestal(&state.block).is_some() {
+            Some(event.pos)
+        } else if pedestal::of_fire(&state.block).is_some() {
+            let below = [x, y - 1, z];
+            let under = ServerLevel { host, level }.state(below)?;
+            Kind::of_pedestal(&under.block).map(|_| below)
+        } else {
+            None
+        };
+        if let Some(pos) = pedestal {
+            wand_on_pedestal(host, level, pos, wand, player);
+            return Some(InteractionResult::Success);
+        }
+        if !is_torch(&state.block) {
+            return None;
+        }
+        let sneak = player.is_some_and(|p| sneaking(&*host, p));
+        let mut world = ServerLevel { host, level };
+        let sound = pedestal::wand_on_torch(&mut world, event.pos, wand, sneak)?;
+        wand_sound(host, level, player, sound);
+        Some(InteractionResult::Success)
+    }
+}
+
+/// One of the floor or wall torches (`ALTorch`, `ALTorch_Wall`).
+fn is_torch(block: &str) -> bool {
+    block
+        .strip_prefix(MOD)
+        .and_then(|rest| rest.strip_prefix(':'))
+        .is_some_and(|name| name.starts_with("al_torch_") || name.starts_with("al_wall_torch_"))
+}
+
 /// The 96 standing torches and fire pits.
 pub struct Pedestal;
 
 #[mod_api::sunrise_part]
 impl BlockPart for Pedestal {
-    /// `Pedestal.useItemOn`, and a wand's `use` aimed at the pedestal.
+    /// `Pedestal.useItemOn`: a wand fails here, so its own use ([`Wand`]) runs.
     fn use_item_on(
         &self,
         host: &mut dyn ServerHost,
         event: &mut UseItemOnEvent<'_>,
     ) -> Option<InteractionResult> {
         let click = event.click;
-        let level = host.level(click.dimension.key().id())?;
-        let player = host.player(click.player);
-        if let Some(wand) = block_id(&*host, click.stack).and_then(|id| FireType::of_wand(&id)) {
-            wand_on_pedestal(host, level, click.pos, wand, player);
-            return Some(InteractionResult::Success);
+        if block_id(&*host, click.stack).is_some_and(|id| FireType::of_wand(&id).is_some()) {
+            return Some(InteractionResult::Fail);
         }
+        let level = host.level(click.dimension.key().id())?;
         let mut world = ServerLevel { host, level };
         let state = world.state(click.pos)?;
         let kind = Kind::of_pedestal(&state.block)?;
@@ -265,24 +311,6 @@ impl BlockPart for Fire {
         }
     }
 
-    /// A wand's `use` aimed at a fire changes the pedestal under it.
-    fn use_item_on(
-        &self,
-        host: &mut dyn ServerHost,
-        event: &mut UseItemOnEvent<'_>,
-    ) -> Option<InteractionResult> {
-        let click = event.click;
-        let wand = block_id(&*host, click.stack).and_then(|id| FireType::of_wand(&id))?;
-        let level = host.level(click.dimension.key().id())?;
-        let [x, y, z] = click.pos;
-        let below = [x, y - 1, z];
-        let state = ServerLevel { host, level }.state(below)?;
-        Kind::of_pedestal(&state.block)?;
-        let player = host.player(click.player);
-        wand_on_pedestal(host, level, below, wand, player);
-        Some(InteractionResult::Success)
-    }
-
     /// `FireBase.animateTick`: smoke above the fire; a light block has none.
     fn animate_tick(&self, host: &mut dyn ClientHost, event: &mut AnimateTickEvent<'_>) {
         let Some(block) = event.state.block().id(&*host) else {
@@ -327,27 +355,11 @@ impl BlockPart for FireSound {
     }
 }
 
-/// The floor and wall torches: the soul wand turns their flame.
+/// The floor and wall torches: a soul wand in the off hand places a soul torch.
 pub struct Torch;
 
 #[mod_api::sunrise_part]
 impl BlockPart for Torch {
-    fn use_item_on(
-        &self,
-        host: &mut dyn ServerHost,
-        event: &mut UseItemOnEvent<'_>,
-    ) -> Option<InteractionResult> {
-        let click = event.click;
-        let wand = block_id(&*host, click.stack).and_then(|id| FireType::of_wand(&id))?;
-        let level = host.level(click.dimension.key().id())?;
-        let player = host.player(click.player);
-        let sneak = player.is_some_and(|p| sneaking(&*host, p));
-        let sound =
-            pedestal::wand_on_torch(&mut ServerLevel { host, level }, click.pos, wand, sneak)?;
-        wand_sound(host, level, player, sound);
-        Some(InteractionResult::Success)
-    }
-
     /// `ALTorch.setPlacedBy`: a soul wand in the off hand places a soul torch.
     fn set_placed_by(&self, host: &mut dyn ServerHost, event: &mut SetPlacedByEvent<'_>) {
         let Some(player) = placer(host, event) else {
@@ -366,71 +378,6 @@ impl BlockPart for Torch {
                 .insert("firetype".into(), FireType::Soul.name().into());
             world.set(event.pos, &next);
         }
-    }
-}
-
-/// The floor torches: placed against a wall, the item puts down the wall torch.
-pub struct FloorTorch;
-
-#[mod_api::sunrise_part]
-impl BlockPart for FloorTorch {
-    /// `StandingAndWallBlockItem.getPlacementState`.
-    fn state_for_placement(
-        &self,
-        level: LevelSide,
-        event: &mut StateForPlacementEvent<'_>,
-    ) -> Option<Option<mod_api::BlockState>> {
-        let (LevelSide::Server(level) | LevelSide::Client(level)) = level;
-        let material = level
-            .state_block(event.state)?
-            .strip_prefix(MOD)?
-            .strip_prefix(":al_torch_")?
-            .to_owned();
-        let ctx = event.context;
-        let pos = [ctx.pos.x, ctx.pos.y, ctx.pos.z];
-        let sturdy = |at: [i32; 3], face: BlockFace, support: SupportType| {
-            level.block_face_sturdy(at, face, support).unwrap_or(false)
-        };
-        let looking = torch::nearest_looking(ctx.yaw, ctx.pitch, ctx.face, ctx.replace_clicked);
-        let chosen = torch::placement(
-            looking,
-            // TorchBlock.canSurvive: the block below holds its centre.
-            || {
-                sturdy(
-                    [pos[0], pos[1] - 1, pos[2]],
-                    BlockFace::Up,
-                    SupportType::Center,
-                )
-            },
-            // WallTorchBlock.canSurvive: the block behind has a full face toward it.
-            |facing| {
-                let [dx, dy, dz] = facing.opposite().normal();
-                sturdy(
-                    [pos[0] + dx, pos[1] + dy, pos[2] + dz],
-                    face_of(facing),
-                    SupportType::Full,
-                )
-            },
-        );
-        Some(match chosen {
-            Some(torch::Placement::Floor) => Some(event.state),
-            Some(torch::Placement::Wall(facing)) => level.block_state_id(&format!(
-                "{MOD}:al_wall_torch_{material}[facing={}]",
-                torch::facing_name(facing)
-            )),
-            None => None,
-        })
-    }
-}
-
-fn face_of(d: Direction) -> BlockFace {
-    match d {
-        Direction::Down => BlockFace::Down,
-        Direction::Up => BlockFace::Up,
-        Direction::North => BlockFace::North,
-        Direction::South => BlockFace::South,
-        Direction::West => BlockFace::West,
-        Direction::East => BlockFace::East,
     }
 }
 
@@ -497,9 +444,6 @@ pub fn declare(r: &mut dyn Registrar) {
         for torch in ["al_torch", "al_wall_torch"] {
             let block = r.block_key(&format!("{MOD}:{torch}_{material}"));
             r.block_part(block, Torch);
-            if torch == "al_torch" {
-                r.block_part(block, FloorTorch);
-            }
         }
     }
     for (name, tip) in [
@@ -508,5 +452,6 @@ pub fn declare(r: &mut dyn Registrar) {
     ] {
         let item = r.item_key(&format!("{MOD}:{name}"));
         r.item_part(item, crate::tips::Tooltip(tip));
+        r.item_part(item, Wand);
     }
 }

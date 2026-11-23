@@ -9,19 +9,22 @@
           "name": "additional_lights:fire_for_fire_pit_l"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:block_state_property",
-          "block": "additional_lights:fire_for_fire_pit_l",
-          "properties": {
-            "summoned": "false",
-            "temp": "false"
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:match_block",
+            "blocks": "additional_lights:fire_for_fire_pit_l",
+            "state": {
+              "summoned": "false",
+              "temp": "false"
+            }
+          },
+          {
+            "type": "minecraft:survives_explosion"
           }
-        },
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+        ]
+      }
     }
   ],
   "random_sequence": "additional_lights:blocks/fire_for_fire_pit_l"

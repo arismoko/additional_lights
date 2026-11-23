@@ -9,11 +9,9 @@
           "name": "additional_lights:standing_torch_s_packed_ice"
         }
       ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ]
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      }
     }
   ],
   "random_sequence": "additional_lights:blocks/standing_torch_s_packed_ice"
