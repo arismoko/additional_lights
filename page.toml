@@ -19,12 +19,12 @@ Differences from the original:
 categories = ["decoration"]
 
 [[screenshots]]
-path = "page/night-display.png"
-caption = "Lamps and torches lighting a wall at midnight; the soul torches burn dimmer."
+path = "page/lamps-close.png"
+caption = "Floor lamps and wall torches up close."
 
 [[screenshots]]
 path = "page/display.png"
-caption = "A row of lamps and a wall of floor and wall torches by day."
+caption = "A row of lamps and a wall of floor and wall torches."
 
 [[screenshots]]
 path = "page/creative-tab.png"
