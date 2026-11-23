@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "firetype=normal": {
+      "model": "additional_lights:block/fire_pit_l/fire_pit_l_polished_andesite"
+    },
+    "firetype=soul": {
+      "model": "additional_lights:block/fire_pit_l/fire_pit_l_polished_andesite_soulfire"
+    },
+    "firetype=light": {
+      "model": "additional_lights:block/fire_pit_l/fire_pit_l_polished_andesite"
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "template": "minecraft:pink_wool",
+  "properties": {
+    "light": 0
+  },
+  "shapes": {
+    "default": [
+      [
+        0.25,
+        0.0,
+        0.25,
+        0.75,
+        0.125,
+        0.75
+      ],
+      [
+        0.3125,
+        0.0,
+        0.3125,
+        0.6875,
+        0.25,
+        0.6875
+      ],
+      [
+        0.375,
+        0.25,
+        0.375,
+        0.625,
+        0.75,
+        0.625
+      ],
+      [
+        0.3125,
+        0.75,
+        0.3125,
+        0.6875,
+        0.875,
+        0.6875
+      ],
+      [
+        0.25,
+        0.875,
+        0.25,
+        0.75,
+        1.0,
+        0.75
+      ]
+    ]
+  },
+  "state_properties": {
+    "waterlogged": {
+      "type": "boolean"
+    },
+    "firetype": {
+      "type": "enum",
+      "values": [
+        "normal",
+        "soul",
+        "light"
+      ]
+    },
+    "previous_firetype": {
+      "type": "enum",
+      "values": [
+        "normal",
+        "soul",
+        "light"
+      ]
+    },
+    "accept_power": {
+      "type": "boolean"
+    },
+    "ispowered": {
+      "type": "boolean"
+    },
+    "activated": {
+      "type": "boolean"
+    },
+    "lit": {
+      "type": "boolean"
+    }
+  },
+  "default_state": {
+    "waterlogged": "false",
+    "firetype": "normal",
+    "previous_firetype": "normal",
+    "accept_power": "true",
+    "ispowered": "false",
+    "activated": "false",
+    "lit": "false"
+  },
+  "item": true
+}

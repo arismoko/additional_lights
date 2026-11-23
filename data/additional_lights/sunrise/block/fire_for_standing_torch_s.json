@@ -1,0 +1,44 @@
+{
+  "template": "minecraft:stone",
+  "properties": {
+    "hardness": 0.0,
+    "explosion_resistance": 0.0,
+    "requires_tool": false,
+    "light": 15,
+    "map_color": 4,
+    "sounds": "minecraft:white_wool",
+    "occludes": false
+  },
+  "shapes": {
+    "default": [
+      [
+        0.25,
+        -0.375,
+        0.25,
+        0.75,
+        0.125,
+        0.75
+      ]
+    ]
+  },
+  "collision_shapes": {
+    "default": []
+  },
+  "state_properties": {
+    "set": {
+      "type": "boolean"
+    },
+    "summoned": {
+      "type": "boolean"
+    },
+    "temp": {
+      "type": "boolean"
+    }
+  },
+  "default_state": {
+    "set": "false",
+    "summoned": "false",
+    "temp": "false"
+  },
+  "item": true
+}

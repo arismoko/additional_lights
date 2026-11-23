@@ -1,0 +1,6 @@
+{
+  "parent": "additional_lights:block/standing_torch_s/template_standing_torch_s_quartz",
+  "textures": {
+    "main": "block/quartz_block_side"
+  }
+}

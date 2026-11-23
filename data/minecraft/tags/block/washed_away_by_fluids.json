@@ -56,6 +56,18 @@
     "additional_lights:al_wall_torch_magenta_wool",
     "additional_lights:al_wall_torch_crimson_planks",
     "additional_lights:al_wall_torch_warped_planks",
-    "additional_lights:al_wall_torch_blackstone"
+    "additional_lights:al_wall_torch_blackstone",
+    "additional_lights:fire_for_standing_torch_s",
+    "additional_lights:fire_for_standing_torch_l",
+    "additional_lights:fire_for_fire_pit_s",
+    "additional_lights:fire_for_fire_pit_l",
+    "additional_lights:soul_fire_for_standing_torch_s",
+    "additional_lights:soul_fire_for_standing_torch_l",
+    "additional_lights:soul_fire_for_fire_pit_s",
+    "additional_lights:soul_fire_for_fire_pit_l",
+    "additional_lights:light_fire_for_standing_torch_s",
+    "additional_lights:light_fire_for_standing_torch_l",
+    "additional_lights:light_fire_for_fire_pit_s",
+    "additional_lights:light_fire_for_fire_pit_l"
   ]
 }
