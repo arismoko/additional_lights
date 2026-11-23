@@ -19,5 +19,13 @@ Differences from the original:
 categories = ["decoration"]
 
 [[screenshots]]
-path = "page/world.png"
-caption = "Lamps and torches in several materials."
+path = "page/night-display.png"
+caption = "Lamps and torches lighting a wall at midnight; the soul torches burn dimmer."
+
+[[screenshots]]
+path = "page/display.png"
+caption = "A row of lamps and a wall of floor and wall torches by day."
+
+[[screenshots]]
+path = "page/creative-tab.png"
+caption = "The creative tab."
