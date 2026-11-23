@@ -1,10 +1,14 @@
-# Additional Lights for Sunrise: content only (data/ and assets/), no code.
+# Additional Lights for Sunrise: native code in src/ with its data/ and assets/.
 id = "additional_lights"
 name = "Additional Lights"
 version = "3.1.5"
-description = "Lamps, floor torches and wall torches made from 28 vanilla materials."
+description = "Lamps, torches, standing torches and fire pits made from vanilla materials, with soul and light wands."
 authors = ["mgen256"]
 license = "MIT"
 credits = "Ported to Minecraft 26.3 by AdLf0208, and to Sunrise by arismoko."
 homepage = "https://github.com/arismoko/additional_lights"
 side = "both"
+
+[native]
+game = "26.3"
+sunrise = "7cfdf81463ebb4a19705768273909f7f3f03601d"
