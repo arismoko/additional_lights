@@ -1,7 +1,7 @@
 # Additional Lights for Sunrise: content only (data/ and assets/), no code.
 id = "additional_lights"
 name = "Additional Lights"
-version = "3.1.4"
+version = "3.1.5"
 description = "Lamps, floor torches and wall torches made from 28 vanilla materials."
 authors = ["mgen256"]
 license = "MIT"
