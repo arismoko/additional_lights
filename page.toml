@@ -19,7 +19,7 @@ Differences from the original:
 
 - Redstone lights a standing torch or fire pit at the end of the tick its signal changes.
 - Breaking a light block above a standing torch or fire pit breaks the light, not the pedestal under it.
-- Breaking a light block above a pedestal takes the light's own time and sound, not the pedestal's.
+- Breaking a light block above a standing torch or fire pit breaks only the light, at once and with the wool sound, not the pedestal under it.
 - The fire surface is the fixed texture (the original's "static" mode); its "dynamic" mode, which rebuilds it from the game's campfire fire, is not available.
 - The creative tab has no colour-sort button.
 """
