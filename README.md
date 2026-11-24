@@ -17,10 +17,10 @@ A port of [Additional Lights](https://github.com/mgen256/AdditionalLights) by mg
 
 ## Differences from the original
 
-- Redstone lights a standing torch or fire pit at the end of the tick its signal changes.
-- Breaking a light block above a standing torch or fire pit breaks only the light, at once and with the wool sound, not the pedestal under it.
-- The fire surface is the fixed texture (the original's "static" mode); its "dynamic" mode, which rebuilds it from the game's campfire fire, is not available.
-- The creative tab has no colour-sort button.
+- Redstone lights a standing torch or fire pit at the end of the tick its signal changes ([sunrise-org/sunrise#5278](https://github.com/sunrise-org/sunrise/issues/5278)).
+- Breaking a light block above a standing torch or fire pit breaks only the light, at once and with the wool sound, not the pedestal under it ([sunrise-org/sunrise#5280](https://github.com/sunrise-org/sunrise/issues/5280)).
+- The fire surface is the fixed texture (the original's "static" mode); its "dynamic" mode, which rebuilds it from the game's campfire fire, is not available yet ([sunrise-org/sunrise#5300](https://github.com/sunrise-org/sunrise/issues/5300)).
+- The creative tab has no reverse-order or colour-sort button ([sunrise-org/sunrise#5301](https://github.com/sunrise-org/sunrise/issues/5301), [#4601](https://github.com/sunrise-org/sunrise/issues/4601)).
 - A torch placed against a wall becomes the game's own wall torch, not the material's: Sunrise cannot yet give a mod's torch item a wall form ([sunrise-org/sunrise#4879](https://github.com/sunrise-org/sunrise/issues/4879)).
 
 ## Building
