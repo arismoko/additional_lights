@@ -1,9 +1,9 @@
 //! The game glue: the block parts on the pedestals, fires and torches, and the [`World`] the
 //! rules in [`crate::pedestal`] run over.
 //!
-//! A neighbour change can't write the level from its hook, so a pedestal that heard one is
-//! queued and settled after its level's tick (`Hooks::level_tick_post`), with the full server
-//! host: the same tick as the change.
+//! A neighbour change's level writer can't destroy the fire or update comparators
+//! (sunrise#5278), so a pedestal that heard one is queued and settled after its level's tick
+//! (`Hooks::level_tick_post`), with the full server host: the same tick as the change.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::{Mutex, MutexGuard};
@@ -11,9 +11,9 @@ use std::sync::{Mutex, MutexGuard};
 use mod_api::{
     self, AnalogOutputEvent, AnimateTickEvent, BlockPart, BlockUpdateFlags, ClientHost, Direction,
     HasAnalogOutputEvent, Host, HostSide, InteractionResult, ItemPart, LevelHost, LevelRandomHost,
-    LevelRef, LevelTicksHost, NeighborChangedEvent, NeighbourUpdate, ParticleKey, ParticleOptions,
-    PlayerRef, Registrar, ServerHost, SetPlacedByEvent, SoundSource, UpdateShapeEvent,
-    UseItemOnEvent, UseOnEvent,
+    LevelRef, LevelTicksHost, LevelWriteHost, NeighborChangedEvent, NeighbourUpdate, ParticleKey,
+    ParticleOptions, PlayerRef, Registrar, ServerHost, SetPlacedByEvent, SoundSource,
+    UpdateShapeEvent, UseItemOnEvent, UseOnEvent,
 };
 
 use crate::pedestal::{self, FireType, Kind, MOD, Reader, State, World};
@@ -253,7 +253,7 @@ impl BlockPart for Pedestal {
     }
 
     /// `Pedestal.neighborChanged`: settled after the level's tick.
-    fn neighbor_changed(&self, _: &mut dyn LevelTicksHost, event: &mut NeighborChangedEvent) {
+    fn neighbor_changed(&self, _: &mut dyn LevelWriteHost, event: &mut NeighborChangedEvent) {
         let pos = [event.pos.x, event.pos.y, event.pos.z];
         let mut queue = queue();
         let level = queue
