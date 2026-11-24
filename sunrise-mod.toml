@@ -1,7 +1,7 @@
 # Additional Lights for Sunrise: native code in src/ with its data/ and assets/.
 id = "additional_lights"
 name = "Additional Lights"
-version = "3.1.6"
+version = "3.1.7"
 description = "Lamps, torches, standing torches and fire pits made from vanilla materials, with soul and light wands."
 authors = ["mgen256", "arismoko"]
 license = "MIT"
