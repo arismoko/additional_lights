@@ -11,7 +11,7 @@
 //! | `level_tick_post` | this module | redstone lights or puts out each queued pedestal |
 //! | `tooltip` | [`tips::Tooltip`] | the pedestals' and wands' Shift-for-info lines |
 //! | `sound_type` | [`support::FireSound`] | the fires' extinguish sound |
-//! | `register_configs`, `config_loading`, `register_load_conditions` | this module | `enableFireCrafting` and the condition on the fire recipes |
+//! | `register` (config), `register_load_conditions` | this module | `enableFireCrafting` and the condition on the fire recipes |
 //! | `analog_output` | [`support::Pedestal`] | comparators read the fire's type |
 //! | `update_shape` | [`support::Fire`] | a fire with nothing under it goes out |
 
@@ -20,10 +20,11 @@ pub mod pedestal;
 pub mod support;
 pub mod tips;
 
+use std::sync::Arc;
+
 use mod_api::{
-    self, Config, ConfigContext, ConfigKind, ConfigLoadingEvent, Hooks, HostSide, Identifier,
-    LevelTickPostEvent, RegisterConfigsEvent, RegisterLoadConditionsEvent, Registrar,
-    RegistrationContext,
+    self, ConfigEvent, ConfigKind, ConfigSnapshot, ConfigSpec, Hooks, HostSide, Identifier,
+    LevelTickPostEvent, RegisterLoadConditionsEvent, Registrar, RegistrationContext,
 };
 
 /// The pedestals' materials (`tools/block_definitions.csv`).
@@ -93,26 +94,18 @@ struct Mod;
 impl Hooks for Mod {
     fn register(&self, r: &mut dyn Registrar, _: &RegistrationContext) {
         support::declare(r);
-    }
-
-    /// `AdditionalLightsConfig`: `config/additional_lights-common.toml`.
-    fn register_configs(&self, _: &dyn ConfigContext, event: &mut RegisterConfigsEvent<'_>) {
-        event.configs.push(Config::new(
-            pedestal::MOD,
-            ConfigKind::Common,
-            config::DEFAULT,
-        ));
-    }
-
-    fn config_loading(&self, _: &dyn ConfigContext, event: &mut ConfigLoadingEvent<'_>) {
-        if event.config.mod_id == pedestal::MOD {
-            config::set_from(&event.config.text);
-        }
-    }
-
-    fn config_reloading(&self, _: HostSide, event: &mut mod_api::ConfigReloadingEvent<'_>) {
-        if event.config.mod_id == pedestal::MOD {
-            config::set_from(&event.config.text);
+        // `AdditionalLightsConfig`: `config/additional_lights-common.toml`.
+        let listener = |event: ConfigEvent<'_>, snapshot: &ConfigSnapshot| -> Result<(), String> {
+            if matches!(event, ConfigEvent::Loading(_) | ConfigEvent::Reloading(_)) {
+                config::set_from(&snapshot.text);
+            }
+            Ok(())
+        };
+        if let Err(err) = r.register_config(
+            ConfigSpec::new(ConfigKind::Common, config::DEFAULT),
+            Some(Arc::new(listener)),
+        ) {
+            eprintln!("additional_lights: config registration failed: {err:?}");
         }
     }
 

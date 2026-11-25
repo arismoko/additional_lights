@@ -11,9 +11,9 @@ use std::sync::{Mutex, MutexGuard};
 use mod_api::{
     self, AnalogOutputEvent, AnimateTickEvent, BlockPart, BlockUpdateFlags, ClientHost, Direction,
     HasAnalogOutputEvent, Host, HostSide, InteractionResult, ItemPart, LevelHost, LevelRandomHost,
-    LevelRef, LevelTicksHost, LevelWriteHost, NeighborChangedEvent, NeighbourUpdate, ParticleKey,
-    ParticleOptions, PlayerRef, Registrar, ServerHost, SetPlacedByEvent, SoundSource,
-    UpdateShapeEvent, UseItemOnEvent, UseOnEvent,
+    LevelRef, LevelSide, LevelTicksHost, LevelWriteHost, NeighborChangedEvent, NeighbourUpdate,
+    ParticleKey, ParticleOptions, PlayerRef, Registrar, ServerHost, SetPlacedByEvent,
+    SoundEventKey, SoundSource, UpdateShapeEvent, UseItemOnEvent, UseOnEvent,
 };
 
 use crate::pedestal::{self, FireType, Kind, MOD, Reader, State, World};
@@ -209,12 +209,16 @@ pub struct Pedestal;
 
 #[mod_api::sunrise_part]
 impl BlockPart for Pedestal {
-    /// `Pedestal.useItemOn`: a wand fails here, so its own use ([`Wand`]) runs.
+    /// `Pedestal.useItemOn`: a wand fails here, so its own use ([`Wand`]) runs. Only the server
+    /// lights it; a client leaves the answer to the template's prediction.
     fn use_item_on(
         &self,
-        host: &mut dyn ServerHost,
+        host: HostSide<'_>,
         event: &mut UseItemOnEvent<'_>,
     ) -> Option<InteractionResult> {
+        let HostSide::Server(host) = host else {
+            return None;
+        };
         let click = event.click;
         if block_id(&*host, click.stack).is_some_and(|id| FireType::of_wand(&id).is_some()) {
             return Some(InteractionResult::Fail);
@@ -335,23 +339,37 @@ impl BlockPart for Fire {
 
 /// The sounds of the normal and soul fires (`FireBase.createProps`): the extinguish sound when
 /// one is broken, at 1.5 volume, and wool's and stone's for the rest.
-pub struct FireSound;
+pub struct FireSound {
+    extinguish: SoundEventKey,
+    step: SoundEventKey,
+    place: SoundEventKey,
+    hit: SoundEventKey,
+    fall: SoundEventKey,
+}
+
+impl FireSound {
+    fn new() -> Option<Self> {
+        Some(Self {
+            extinguish: SoundEventKey::parse("additional_lights:fire_extinguish")?,
+            step: SoundEventKey::parse("minecraft:block.wool.step")?,
+            place: SoundEventKey::parse("minecraft:block.stone.place")?,
+            hit: SoundEventKey::parse("minecraft:block.wool.hit")?,
+            fall: SoundEventKey::parse("minecraft:block.wool.fall")?,
+        })
+    }
+}
 
 #[mod_api::sunrise_part]
 impl BlockPart for FireSound {
-    fn sound_type(
-        &self,
-        _context: &dyn mod_api::LoopContext,
-        event: &mut mod_api::SoundTypeEvent<'_>,
-    ) {
+    fn sound_type(&self, _: LevelSide<'_>, event: &mut mod_api::SoundTypeEvent<'_>) {
         let sound = &mut *event.sound;
         sound.volume = 1.5;
         sound.pitch = 1.0;
-        sound.break_sound = "additional_lights:fire_extinguish".into();
-        sound.step = "minecraft:block.wool.step".into();
-        sound.place = "minecraft:block.stone.place".into();
-        sound.hit = "minecraft:block.wool.hit".into();
-        sound.fall = "minecraft:block.wool.fall".into();
+        sound.break_sound = self.extinguish.clone();
+        sound.step = self.step.clone();
+        sound.place = self.place.clone();
+        sound.hit = self.hit.clone();
+        sound.fall = self.fall.clone();
     }
 }
 
@@ -436,7 +454,9 @@ pub fn declare(r: &mut dyn Registrar) {
             r.block_part(block, Fire { smoke });
             if fire != FireType::Light {
                 let block = r.block_key(&pedestal::fire_block(kind, fire));
-                r.block_part(block, FireSound);
+                if let Some(sound) = FireSound::new() {
+                    r.block_part(block, sound);
+                }
             }
         }
     }

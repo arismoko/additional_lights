@@ -56,10 +56,10 @@ pub struct Tooltip(pub Tip);
 
 #[mod_api::sunrise_part]
 impl ItemPart for Tooltip {
-    fn tooltip(&self, host: &dyn ClientHost, event: &mut TooltipEvent<'_>) {
+    fn tooltip(&self, host: &dyn ClientHost, event: &mut TooltipEvent<'_, '_>) {
         for key in self.0.keys(host.modifiers().shift()) {
             // `u32::MAX` keeps the text's own colour, as the original adds plain components.
-            event
+            let _ = event
                 .lines
                 .push((Text::translate(key, Vec::new()), u32::MAX));
         }
