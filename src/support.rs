@@ -48,7 +48,9 @@ impl World for ServerLevel<'_> {
     }
 
     fn destroy(&mut self, pos: [i32; 3]) {
-        let _ = self.level.destroy_block(self.host, pos, true, None, false);
+        let _ = self
+            .level
+            .destroy_block(self.host, pos, true, None, None, false);
     }
 
     fn powered(&self, pos: [i32; 3]) -> bool {
@@ -307,31 +309,24 @@ impl BlockPart for Fire {
 
     /// `Fire_Light.getDestroyProgress`: a light block above a pedestal mines as the pedestal
     /// under it (sunrise#5280); anything else keeps the game's own math.
-    fn destroy_progress(&self, host: HostSide<'_>, event: &mut DestroyProgressEvent<'_>) {
+    fn destroy_progress(
+        &self,
+        host: HostSide<'_>,
+        event: &mut DestroyProgressEvent,
+    ) -> Option<f32> {
         let HostSide::Server(host) = host else {
-            return;
+            return None;
         };
-        let Some(state) = host
+        let level = event.player.level(&*host)?;
+        let state = host
             .block_state_string(event.state)
-            .and_then(|text| State::parse(&text))
-        else {
-            return;
-        };
-        let mut world = ServerLevel {
-            host,
-            level: event.level,
-        };
-        let pos = [event.pos.x, event.pos.y, event.pos.z];
-        let Some((below, _)) = pedestal::mines_as(&world, pos, &state) else {
-            return;
-        };
-        let Some(pedestal) = event.level.block_state(&*world.host, below) else {
-            return;
-        };
-        event.progress =
-            event
-                .player
-                .destroy_progress(&mut *world.host, event.level, below, pedestal);
+            .and_then(|text| State::parse(&text))?;
+        let world = ServerLevel { host, level };
+        let (below, _) = pedestal::mines_as(&world, event.pos, &state)?;
+        let pedestal = level.block_state(&*world.host, below)?;
+        event
+            .player
+            .destroy_progress(&mut *world.host, level, below, pedestal)
     }
 
     /// `FireBase.setPlacedBy`.

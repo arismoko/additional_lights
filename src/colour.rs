@@ -25,7 +25,7 @@ pub fn average_colour(width: u32, height: u32, rgba: &[u8]) -> Option<u32> {
         return None;
     }
     let (mut r, mut g, mut b, mut weight) = (0u64, 0u64, 0u64, 0u64);
-    for px in rgba.chunks_exact(4) {
+    for px in rgba.as_chunks::<4>().0 {
         let a = u64::from(px[3]);
         r += u64::from(px[0]) * a;
         g += u64::from(px[1]) * a;
@@ -82,7 +82,7 @@ mod tests {
         let px = [255, 0, 0, 255, 0, 255, 0, 0];
         assert_eq!(average_colour(2, 1, &px), Some(0xff0000));
         let px = [200, 100, 0, 255, 100, 50, 0, 255];
-        assert_eq!(average_colour(1, 2, &px), Some(0x963200));
+        assert_eq!(average_colour(1, 2, &px), Some(0x964b00));
     }
 
     #[test]
