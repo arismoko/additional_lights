@@ -240,6 +240,20 @@ fn up([x, y, z]: [i32; 3]) -> [i32; 3] {
     [x, y + 1, z]
 }
 
+/// `Fire_Light.getDestroyProgress`: the position whose state a light block above a pedestal
+/// mines as, the pedestal under it. None for a fire that isn't a light block, or one with no
+/// pedestal of its own kind under it.
+pub fn mines_as(level: &dyn Reader, pos: [i32; 3], state: &State) -> Option<([i32; 3], State)> {
+    let (fire, kind) = of_fire(&state.block)?;
+    if fire != FireType::Light {
+        return None;
+    }
+    let [x, y, z] = pos;
+    let below = [x, y - 1, z];
+    let pedestal = level.state(below)?;
+    (Kind::of_pedestal(&pedestal.block) == Some(kind)).then_some((below, pedestal))
+}
+
 fn is_fire(state: &State) -> bool {
     of_fire(&state.block).is_some()
 }
@@ -808,5 +822,19 @@ mod tests {
         fire_placed(&mut level, UP, &other);
         assert!(!level.state(UP).unwrap().flag("set"));
         assert!(!fire_supported("minecraft:water") && fire_supported("minecraft:stone"));
+    }
+
+    #[test]
+    fn a_light_block_mines_as_the_pedestal_under_it() {
+        let mut level = Level::default();
+        let stone = State::parse("additional_lights:standing_torch_s_stone").unwrap();
+        let kind = Kind::of_pedestal(&stone.block).unwrap();
+        level.blocks.insert([0, 63, 0], stone.clone());
+        let light = State::parse(&fire_block(kind, FireType::Light)).unwrap();
+        let pos = [0, 64, 0];
+        assert_eq!(mines_as(&level, pos, &light), Some(([0, 63, 0], stone)));
+        let normal = State::parse(&fire_block(kind, FireType::Normal)).unwrap();
+        assert_eq!(mines_as(&level, pos, &normal), None);
+        assert_eq!(mines_as(&Level::default(), pos, &light), None);
     }
 }

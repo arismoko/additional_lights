@@ -9,11 +9,12 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::sync::{Mutex, MutexGuard};
 
 use mod_api::{
-    self, AnalogOutputEvent, AnimateTickEvent, BlockPart, BlockUpdateFlags, ClientHost, Direction,
-    HasAnalogOutputEvent, Host, HostSide, InteractionResult, ItemPart, LevelHost, LevelRandomHost,
-    LevelRef, LevelSide, LevelTicksHost, LevelWriteHost, NeighborChangedEvent, NeighbourUpdate,
-    ParticleKey, ParticleOptions, PlayerRef, Registrar, ServerHost, SetPlacedByEvent,
-    SoundEventKey, SoundSource, UpdateShapeEvent, UseItemOnEvent, UseOnEvent,
+    self, AnalogOutputEvent, AnimateTickEvent, BlockPart, BlockUpdateFlags, ClientHost,
+    DestroyProgressEvent, Direction, HasAnalogOutputEvent, Host, HostSide, InteractionResult,
+    ItemPart, LevelHost, LevelRandomHost, LevelRef, LevelSide, LevelTicksHost, LevelWriteHost,
+    NeighborChangedEvent, NeighbourUpdate, ParticleKey, ParticleOptions, PlayerRef, Registrar,
+    ServerHost, SetPlacedByEvent, SoundEventKey, SoundSource, UpdateShapeEvent, UseItemOnEvent,
+    UseOnEvent,
 };
 
 use crate::pedestal::{self, FireType, Kind, MOD, Reader, State, World};
@@ -47,7 +48,9 @@ impl World for ServerLevel<'_> {
     }
 
     fn destroy(&mut self, pos: [i32; 3]) {
-        let _ = self.level.destroy_block(self.host, pos, true, None, false);
+        let _ = self
+            .level
+            .destroy_block(self.host, pos, true, None, None, false);
     }
 
     fn powered(&self, pos: [i32; 3]) -> bool {
@@ -302,6 +305,28 @@ impl BlockPart for Fire {
             return None;
         }
         level.block_state_id("minecraft:air")
+    }
+
+    /// `Fire_Light.getDestroyProgress`: a light block above a pedestal mines as the pedestal
+    /// under it (sunrise#5280); anything else keeps the game's own math.
+    fn destroy_progress(
+        &self,
+        host: HostSide<'_>,
+        event: &mut DestroyProgressEvent,
+    ) -> Option<f32> {
+        let HostSide::Server(host) = host else {
+            return None;
+        };
+        let level = event.player.level(&*host)?;
+        let state = host
+            .block_state_string(event.state)
+            .and_then(|text| State::parse(&text))?;
+        let world = ServerLevel { host, level };
+        let (below, _) = pedestal::mines_as(&world, event.pos, &state)?;
+        let pedestal = level.block_state(&*world.host, below)?;
+        event
+            .player
+            .destroy_progress(&mut *world.host, level, below, pedestal)
     }
 
     /// `FireBase.setPlacedBy`.

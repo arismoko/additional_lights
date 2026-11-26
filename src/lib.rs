@@ -1,3 +1,4 @@
+#![deny(unsafe_code)]
 //! Additional Lights for Sunrise: the lamps and torches are content in `data/` and `assets/`;
 //! this code runs the standing torches, fire pits, their fires and the wands.
 //!
@@ -14,7 +15,9 @@
 //! | `register` (config), `register_load_conditions` | this module | `enableFireCrafting` and the condition on the fire recipes |
 //! | `analog_output` | [`support::Pedestal`] | comparators read the fire's type |
 //! | `update_shape` | [`support::Fire`] | a fire with nothing under it goes out |
+//! | `destroy_progress` | [`support::Fire`] | a light block mines as the pedestal under it |
 
+pub mod colour;
 pub mod config;
 pub mod pedestal;
 pub mod support;

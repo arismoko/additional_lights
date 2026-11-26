@@ -11,16 +11,16 @@ A port of [Additional Lights](https://github.com/mgen256/AdditionalLights) by mg
 - 96 standing torches and fire pits in two sizes and 24 materials. A placed one lights at once; right-click relights it; placed while sneaking it stays unlit and ignores redstone.
 - Redstone lights a standing torch or fire pit and puts it out again, and a comparator reads its fire: 6 for fire, 3 for soul fire, 9 for light.
 - The soul wand turns a fire, standing torch or floor torch to soul fire, and the light wand turns a standing torch or fire pit into a light block; sneak and right-click to turn it back. Held in the off hand, a wand sets what you place.
-- Standing torches, fire pits and the wands list their usage in the tooltip while you hold Shift. Breaking a fire plays the extinguish sound.
+- Standing torches, fire pits and the wands list their usage in the tooltip while you hold Shift. Breaking a fire plays the extinguish sound. A light block above a pedestal mines as the pedestal under it, as in the original, and breaks only the light.
+- `src/colour.rs` reads each material's colour from its blocks-atlas sprite on the CPU, ready for the colour sort once the creative tab can take it.
 - The original's recipes, drops, sounds and creative tab, in every language it ships.
 - The fire recipes (fire and soul fire for each pedestal) are off, as in the original; set `enableFireCrafting = true` in `config/additional_lights-common.toml` and run `/reload` to craft them.
 
 ## Differences from the original
 
 - Redstone lights a standing torch or fire pit at the end of the tick its signal changes ([sunrise-org/sunrise#5278](https://github.com/sunrise-org/sunrise/issues/5278)).
-- Breaking a light block above a standing torch or fire pit breaks only the light, at once and with the wool sound, not the pedestal under it ([sunrise-org/sunrise#5280](https://github.com/sunrise-org/sunrise/issues/5280)).
 - The fire surface is the fixed texture (the original's "static" mode); its "dynamic" mode, which rebuilds it from the game's campfire fire, is not available yet ([sunrise-org/sunrise#5300](https://github.com/sunrise-org/sunrise/issues/5300)).
-- The creative tab has no reverse-order or colour-sort button ([sunrise-org/sunrise#5301](https://github.com/sunrise-org/sunrise/issues/5301), [#4601](https://github.com/sunrise-org/sunrise/issues/4601)).
+- The creative tab has no reverse-order or colour-sort button ([sunrise-org/sunrise#5301](https://github.com/sunrise-org/sunrise/issues/5301)).
 - A torch placed against a wall becomes the game's own wall torch, not the material's: Sunrise cannot yet give a mod's torch item a wall form ([sunrise-org/sunrise#4879](https://github.com/sunrise-org/sunrise/issues/4879)).
 
 ## Building
